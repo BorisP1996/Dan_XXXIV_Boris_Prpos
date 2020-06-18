@@ -14,10 +14,23 @@ namespace Zadatak_1
 
         static void Main(string[] args)
         {
-            Console.WriteLine("Welcome to our bank. We have two ATM machines available.\nPlease enter how many people wants to withdraw money from first ATM:");
-            int firstPeople = Convert.ToInt32(Console.ReadLine());
-            Console.WriteLine("Please enter how many people wants to withdraw money from second ATM:");
-            int secondPeople = Convert.ToInt32(Console.ReadLine());
+            Console.WriteLine("Welcome to our bank. We have two ATM machines available and 10 000 RSD.\nPlease enter how many people wants to withdraw money from first ATM:");
+            int firstPeople;
+            bool tryFirst = Int32.TryParse(Console.ReadLine(), out firstPeople);
+            while (!tryFirst || firstPeople<1)
+            {
+                Console.WriteLine("Please enter valid number:");
+                tryFirst = Int32.TryParse(Console.ReadLine(), out firstPeople);
+            }
+            Console.WriteLine("Please enter how many people wants to withdraw money from second ATM:\n");
+            int secondPeople;
+            bool trySecond = Int32.TryParse(Console.ReadLine(), out secondPeople);
+            while (!trySecond || secondPeople<1)
+            {
+                Console.WriteLine("Please enter valid number:");
+                trySecond = Int32.TryParse(Console.ReadLine(), out secondPeople);
+
+            }
             int totalThreads = firstPeople + secondPeople;
 
             List<Thread> ATM_1 = new List<Thread>();
@@ -27,7 +40,7 @@ namespace Zadatak_1
             for (int i = 0; i < firstPeople; i++)
             {
                 int temp = i + 1;
-                int amount1 = rnd.Next(100, 10000);
+                int amount1 = rnd.Next(100, 10001);
                 Thread t = new Thread(new ThreadStart(() => Withdraw(amount1, Thread.CurrentThread)))
                 {
                     Name = string.Format("Thread_First_ATM_" + temp)
@@ -37,7 +50,7 @@ namespace Zadatak_1
             for (int i = 0; i < secondPeople; i++)
             {
                 int temp = i + 1;
-                int amount2 = rnd.Next(100, 10000);
+                int amount2 = rnd.Next(100, 10001);
                 Thread t = new Thread(new ThreadStart(() => Withdraw(amount2, Thread.CurrentThread)))
                 {
                     Name = string.Format("Thread_Second_ATM_" + temp)
@@ -54,12 +67,6 @@ namespace Zadatak_1
             Console.ReadLine();
         }
 
-        //static int GenerateAmount()
-        //{
-        //    Random rnd = new Random();
-        //    int amount = rnd.Next(100, 10000);
-        //    return amount;
-        //}
         static void Withdraw(int payOut,Thread t)
         {
             lock (l)
@@ -68,11 +75,11 @@ namespace Zadatak_1
                 {
                     totalAmount = totalAmount - payOut;
                     Console.WriteLine("Client {0} is trying to withdraw {1} RSD.", t.Name, payOut);
-                    Console.WriteLine("Amount left in the bank: {0} RSD.", totalAmount);
+                    Console.WriteLine("Amount left in the bank: {0} RSD.\n", totalAmount);
                 }
                 else
                 {
-                    Console.WriteLine("Client {0} tried to withdraw {1} RSD from the bank, but there is not enough money.", t.Name, payOut);
+                    Console.WriteLine("Client {0} tried to withdraw {1} RSD from the bank, but there is not enough money.\n", t.Name, payOut);
                 }
             }
         }
