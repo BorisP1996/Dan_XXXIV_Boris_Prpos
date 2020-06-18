@@ -22,11 +22,12 @@ namespace Zadatak_1
 
             List<Thread> ATM_1 = new List<Thread>();
             List<Thread> ATM_2 = new List<Thread>();
+            Random rnd = new Random();
 
             for (int i = 0; i < firstPeople; i++)
             {
                 int temp = i + 1;
-                int amount1 = GenerateAmount();
+                int amount1 = rnd.Next(100, 10000);
                 Thread t = new Thread(new ThreadStart(() => Withdraw(amount1, Thread.CurrentThread)))
                 {
                     Name = string.Format("Thread_First_ATM_" + temp)
@@ -36,7 +37,7 @@ namespace Zadatak_1
             for (int i = 0; i < secondPeople; i++)
             {
                 int temp = i + 1;
-                int amount2 = GenerateAmount();
+                int amount2 = rnd.Next(100, 10000);
                 Thread t = new Thread(new ThreadStart(() => Withdraw(amount2, Thread.CurrentThread)))
                 {
                     Name = string.Format("Thread_Second_ATM_" + temp)
@@ -53,12 +54,12 @@ namespace Zadatak_1
             Console.ReadLine();
         }
 
-        static int GenerateAmount()
-        {
-            Random rnd = new Random();
-            int amount = rnd.Next(100, 10000);
-            return amount;
-        }
+        //static int GenerateAmount()
+        //{
+        //    Random rnd = new Random();
+        //    int amount = rnd.Next(100, 10000);
+        //    return amount;
+        //}
         static void Withdraw(int payOut,Thread t)
         {
             lock (l)
